@@ -1,6 +1,8 @@
 # Online Automata Simulator
 an Automata Simulator on the web, just for fun.
 
+**try it at [taepras.github.io/automata](http://taepras.github.io/automata)**
+
 ## Features
 - Create & test automata on the web
 - Step-by-step execution
