@@ -2,6 +2,7 @@
 var stateRadius = 30;
 var arrowLength = 20;
 var arrowWidth = 10;
+var alphabetOffset = 10;
 
 var canvas = document.getElementById('canvas');
 
@@ -22,6 +23,8 @@ function isInside(angle, sAngle, eAngle) {
 	var ds = angleDiff(sAngle, angle);
 	var de = angleDiff(eAngle, angle);
 	var d =  angleDiff(sAngle, eAngle);
+	if (d <= 0.0001)
+		return true;
 	return Math.abs(de + ds - d) <= 0.001
 }
 
@@ -36,8 +39,8 @@ function getArcInfo(x1, y1, x2, y2, r = -1) {
             xc: xc,
             yc: yc,
             r: rr,
-            sAngle: Math.PI / 2,
-            eAngle: -3 * Math.PI / 2
+            sAngle: -3 * Math.PI / 2,
+            eAngle: Math.PI / 2
         };
     }
 
@@ -174,6 +177,11 @@ class Automata {
         this.transitions = {};
     }
 
+	reset() {
+		this.currentStates.clear();
+		this.updateActiveStates();
+	}
+
     addTransition(source, alphabet, target) {
         console.log('add link from ' + source + ' to ' + target + ' by ' + alphabet);
         if (typeof this.transitions[source] === 'undefined')
@@ -269,10 +277,11 @@ class Automata {
                     node[target].x, node[target].y);
 
                 // draw transition alphabet
-                var midAngle = arcInfo.sAngle + angleDiff(arcInfo.sAngle, arcInfo.eAngle) / 2;
-                var offset = 20;
-                var cx = arcInfo.xc + (arcInfo.r + offset) * Math.cos(midAngle);
-                var cy = arcInfo.yc + (arcInfo.r + offset) * Math.sin(midAngle);
+				var aDiff = angleDiff(arcInfo.sAngle, arcInfo.eAngle);
+				aDiff = aDiff === 0 ? 2 * Math.PI : aDiff;
+                var midAngle = arcInfo.sAngle + aDiff / 2;
+                var cx = arcInfo.xc + (arcInfo.r + alphabetOffset) * Math.cos(midAngle);
+                var cy = arcInfo.yc + (arcInfo.r + alphabetOffset) * Math.sin(midAngle);
                 thisAutomata.context.font = '16px Arial';
                 thisAutomata.context.textAlign = 'center';
                 thisAutomata.context.fillStyle = '#000000';
@@ -404,7 +413,6 @@ $(function() {
         }
     }).mouseup(function(e) {
         isDragging = false;
-        console.log(hasMoved, selectedIndex);
         if (!hasMoved) { // this is a click
             if (selectedIndex >= 0) {
                 // uiState = 'selected';
@@ -492,19 +500,24 @@ $(function() {
 		var input = inputFull.substring(0, currentStep);
         console.log('testing', inputFull, 'step', currentStep);
 		var isAccepted = automata.run(input);
-		if(currentStep === inputFull.length) {
-			$('.input').text(input.length ? input : '(null)');
-			showAccepted(isAccepted);
-			currentStep = -1;
+		setInput(inputFull, currentStep);
+		showAccepted(isAccepted);
+		if(currentStep >= inputFull.length) {
+			emphasize(isAccepted ? '#accepted' : '#rejected');
 		}
+	});
+
+	$('#reset').click(function() {
+		reset();
 	});
 
     $('#test-form').submit(function(e) {
         e.preventDefault();
 		var input = $('#test-cases').val().trim();
         console.log('testing', input);
-		$('.input').text(input.length ? input : '(null)');
+		setInput(input);
         showAccepted(automata.run(input));
+		emphasize(isAccepted ? '#accepted' : '#rejected');
     });
 
     function reset() {
@@ -513,6 +526,7 @@ $(function() {
 		$('#test-input').removeClass('has-success');
 		$('#test-input').removeClass('has-error');
 		currentStep = -1;
+		automata.reset();
     }
 
     function update() {
@@ -596,16 +610,26 @@ $(function() {
             $('#test-input').removeClass('has-error');
             $('#accepted').removeClass('hidden');
             $('#rejected').addClass('hidden');
-			emphasize('#accepted');
         } else {
             $('#test-input').addClass('has-error');
             $('#test-input').removeClass('has-success');
             $('#accepted').addClass('hidden');
             $('#rejected').removeClass('hidden');
-			emphasize('#rejected');
         }
 	}
 
+	function setInput(input, currentChar = -1) {
+		var html = '';
+		if (currentChar < 0)
+			currentChar = input.length;
+		if (input.length > 0) {
+			html += '<b>' + input.substring(0, currentChar) + '</b>';
+			html += input.substring(currentChar);
+		} else {
+			html += 'null';
+		}
+		$('.input').html(html);
+	}
 	function emphasize(selector) {
 		$(selector).css('transform', 'scale(1.0)');
 		setTimeout(function() {
