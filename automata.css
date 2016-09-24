@@ -1,0 +1,53 @@
+body {
+	margin: 0;
+	background-color: #ccc;
+	background: url('img/bg.png');
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	/*left: 0;*/
+	left: calc(100% - 300px);
+	padding: 24px;
+	background-color: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	width: 300px;
+}
+
+#canvas {
+	position: absolute;
+}
+
+#state-options, #transition-options {
+	position: absolute;
+}
+
+#accepted, #rejected {
+	transition: all 0.1s;
+}
+
+/* unused */
+
+.node .node-body {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	line-height: 50px;
+	background-color: #fff;
+	vertical-align: middle;
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+	border: none;
+	box-shadow:
+		0 0 0 6px #fff,
+		0 0 0 9px #000;
+}
+
+.node.accept .node-body {
+	box-shadow:
+		0 0 0 3px #000,
+		0 0 0 6px #fff,
+		0 0 0 9px #000;
+}

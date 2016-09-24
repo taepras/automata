@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Automata Simulator</title>
+	<script src="lib/jquery-3.1.0.min.js"></script>
+	<script src="lib/jquery-ui.min.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="lib/jquery-ui.min.css">
+	<link rel="stylesheet" href="lib/jquery-ui.structure.min.css">
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="automata.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+</head>
+
+<body>
+	<canvas id="canvas"></canvas>
+	<div class="overlay">
+		<h3>Automata Simulator</h3>
+		<p>click on the board to add new state</p>
+		<hr>
+		<form id="test-form">
+			<div class="form-group has-feedback" id="test-input">
+				<label for="test-cases">Test Case</label>
+				<!-- <textarea class="form-control" name="test-cases" id="test-cases" rows="6"></textarea> -->
+				<input type="text" class="form-control" name="test-cases" id="test-cases">
+				<!-- <span id="accepted" class="hidden glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span> -->
+				<!-- <span id="rejected" class="hidden glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span> -->
+			</div>
+			<div class="form-group">
+				<!-- <button type="submit" class="btn btn-block btn-danger">Run All Test Cases</button> -->
+				<button type="submit" class="btn btn-block btn-danger">Run Automata</button>
+				<button type="button" id="run-step" class="btn btn-block btn-default">Run Alphabet by Alphabet</button>
+			</div>
+			<div class="form-group">
+				<div id="accepted" class="hidden alert alert-success" aria-hidden="true">
+					<b>Input</b> <span class="input"></span>
+					<br><b>Result</b> <span class="glyphicon glyphicon-remove"></span> Accepted!
+				</div>
+				<div id="rejected" class="hidden alert alert-danger" aria-hidden="true">
+					<b>Input</b> <span class="input"></span>
+					<br><b>Result</b> <span class="glyphicon glyphicon-remove"></span> Rejected!
+				</div>
+			</div>
+		</form>
+		<hr>
+		<p class="text-muted">by Tae CP40, see github</p>
+	</div>
+	<div id="state-options" class="options hidden">
+		<div class="btn-group-vertical">
+			<button class="btn-option btn btn-default" id="state-option-rename"><span class="fa fa-edit"></span> Rename</button>
+			<button class="btn-option btn btn-default" id="state-option-toggle-accept"><span class="fa fa-check"></span> Toggle acceptance</button>
+			<button class="btn-option btn btn-default" id="state-option-make-transition"><span class="fa fa-share-alt"></span> Make Transition</button>
+			<button class="btn-option btn btn-default" id="state-option-delete"><span class="fa fa-trash"></span> Delete State</button>
+		</div>
+	</div>
+	<div id="transition-options" class="options hidden">
+		<div class="btn-group-vertical">
+			<!-- <button class="btn-option btn btn-default"><span class="fa fa-edit"></span> Edit Alphabet</button> -->
+			<button class="btn-option btn btn-default" id="transition-option-delete"><span class="fa fa-trash"></span> Remove Transition</button>
+		</div>
+	</div>
+	<script src="automata.js"></script>
+</body>
+
+</html>
